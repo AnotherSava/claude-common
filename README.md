@@ -71,9 +71,9 @@ Generates or updates a data-flow architecture document (`docs/data-flow.md`).
 **Command:** `/document-data-flow`
 
 **Features:**
-- Traces how data moves between components (content script, background, side panel)
+- Discovers the project's architecture by exploring the codebase
 - Produces step-by-step flow diagrams with data transition annotations
-- Generates message protocol tables for all message types
+- Generates message/API protocol tables for all message types and endpoints
 - Follows strict formatting rules for consistency across updates
 
 ## Global Installation
