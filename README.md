@@ -49,6 +49,34 @@ Merges a PR locally via fast-forward to preserve your GPG-signed commits.
 
 ---
 
+### Prepare PR
+
+Analyzes plan-vs-implementation divergence before creating a PR.
+
+**Command:** `/pr-prepare`
+
+**Features:**
+- Compares the most recent completed plan against the progress log and unpushed commits
+- Surfaces unplanned additions, missing plan items, and design divergences
+- Identifies review-driven changes in commit history
+- Read-only analysis — does not modify files or create commits
+
+---
+
+### Update PR
+
+Squashes new local changes into a single commit and pushes to update an existing PR.
+
+**Command:** `/pr-update`
+
+**Features:**
+- Detects new changes since the last push (unpushed commits + uncommitted changes)
+- Squashes them into a single GPG-signed Conventional Commit
+- Rebases onto main and force-pushes with lease
+- Appends an update summary to the PR description
+
+---
+
 ### Commit
 
 Analyzes changes and generates atomic Conventional Commit messages.
