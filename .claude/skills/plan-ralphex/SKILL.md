@@ -70,6 +70,8 @@ Document key design decisions, trade-offs, and rationale.
 Use bold headers for each topic. Include enough detail that
 the reasoning is clear without re-reading the discussion.
 
+**No defensive fallbacks**: Do not design fallback values that mask invalid data (e.g. showing "?" for null ages). Trust input correctness — let invalid values surface as visible `null` or runtime errors rather than silently producing plausible-looking wrong output.
+
 ## Implementation Steps
 
 ### Task N: Short title
@@ -99,3 +101,7 @@ the reasoning is clear without re-reading the discussion.
 ## Step 5: Confirm with the user
 
 Show the plan and ask if they want any changes before writing it to disk.
+
+## Completion
+
+The end goal of this skill is a plan document in `docs/plans/`. Once the user approves the plan and it is written to disk, the skill is **done**. Do NOT offer to execute the plan, start implementation, or invoke any other skill (e.g. ralphex) to carry out the plan.

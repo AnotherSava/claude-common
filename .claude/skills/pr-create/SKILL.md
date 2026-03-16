@@ -1,12 +1,14 @@
 ---
 name: pr-create
 description: Squash ralphex commits into a single Conventional Commit, push, and create a PR to main.
-allowed-tools: Bash(git status*), Bash(git log*), Bash(git diff*), Bash(git reset*), Bash(git add*), Bash(git commit*), Bash(git push*), Bash(git symbolic-ref*), Bash(git rev-parse*), Bash(git branch*), Bash(git fetch*), Bash(git checkout*), Bash(git merge*), Bash(git rebase*), Bash(gh pr create*), Bash(ls *), Read, Glob, Grep
+allowed-tools: Bash(git status:*), Bash(git log:*), Bash(git diff:*), Bash(git reset --soft:*), Bash(git add:*), Bash(git commit:*), Bash(git push:*), Bash(git symbolic-ref:*), Bash(git rev-parse:*), Bash(git branch:*), Bash(git fetch:*), Bash(git checkout:*), Bash(git merge:*), Bash(git rebase:*), Bash(gh pr create:*), Bash(ls:*), Read, Glob, Grep
 ---
 
 # Squash Ralphex Commits and Create PR
 
 Squash all commits on the current feature branch into a single Conventional Commit, push, and open a PR to main.
+
+Read `~/.claude/skills/shared/bash-rules.md` for bash command constraints.
 
 ## Workflow
 
@@ -69,22 +71,9 @@ Squash all commits on the current feature branch into a single Conventional Comm
 
 ### Step 2: Draft commit message
 
-Compose a commit message following Conventional Commits format:
+Read `~/.claude/skills/shared/commit-message-rules.md` for formatting and validation rules.
 
-```
-type(scope): concise summary of the change
-
-Longer description explaining the motivation and what was done.
-Summarize the "why" not just the "what". Reference the plan topic.
-```
-
-Guidelines:
-- **type**: `feat`, `fix`, `refactor`, `docs`, `chore`, etc. — pick based on the primary change
-- **scope**: the subsystem affected (e.g. `engine`, `render`, `extract`, `sidepanel`)
-- **subject line**: imperative mood, lowercase, no period, max ~72 chars
-- **body**: explain what the plan accomplished, key design decisions, and notable implementation details
-- Analyze the diff, commit messages, plan doc, and progress log to write a meaningful summary
-- Do NOT include any AI attribution or Co-Authored-By trailers
+Compose a commit message following those rules. Analyze the diff, commit messages, plan doc, and progress log to write a meaningful summary. Reference the plan topic in the body.
 
 ### Step 3: Confirm with user
 

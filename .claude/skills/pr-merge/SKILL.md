@@ -1,7 +1,7 @@
 ---
 name: pr-merge
 description: Merge a PR locally with fast-forward to preserve GPG-signed commits, then clean up.
-allowed-tools: Bash(git status*), Bash(git log*), Bash(git diff*), Bash(git fetch*), Bash(git checkout*), Bash(git rebase*), Bash(git merge*), Bash(git push*), Bash(git branch*), Bash(git rev-parse*), Bash(git symbolic-ref*), Bash(git stash*), Bash(git remote*), Bash(gh pr *), Read
+allowed-tools: Bash(git status:*), Bash(git log:*), Bash(git diff:*), Bash(git fetch:*), Bash(git checkout:*), Bash(git rebase:*), Bash(git merge:*), Bash(git push:*), Bash(git branch:*), Bash(git rev-parse:*), Bash(git symbolic-ref:*), Bash(git stash:*), Bash(git remote:*), Bash(gh pr:*), Read
 ---
 
 # Merge PR Locally (Preserving GPG Signatures)
@@ -10,6 +10,8 @@ Merge a GitHub PR into main using a local fast-forward merge so the original
 GPG-signed commit(s) land on main with their signatures intact. GitHub's merge
 UI re-creates commits with GitHub's own key, losing the author's GPG signature
 and showing "Unverified" on repos that enforce signing.
+
+Read `~/.claude/skills/shared/bash-rules.md` for bash command constraints.
 
 ## Arguments
 

@@ -8,26 +8,7 @@ allowed-tools: Read, Bash(git diff:*), Bash(git add:*), Bash(git commit:*), Bash
 
 You are tasked with creating git commits for the changes made during this session.
 
-## Bash rules
-
-**One command per call.** Each Bash call must contain a single `git` command — no `&&`, `;`, or pipes. This is required for allowed-tools pattern matching. Use separate sequential Bash calls when commands depend on each other; use parallel calls for independent reads (e.g. `git status` and `git diff`).
-```
-BAD:  git add README.md && git commit -m "msg"
-GOOD: Bash call 1: git add README.md
-      Bash call 2: git commit -m "msg"
-```
-
-**No non-git commands.** Use git's own flags instead of piping to shell tools.
-```
-BAD:  git diff | wc -l
-GOOD: git diff --stat
-```
-
-**No `cd`.** The working directory is already the project root.
-```
-BAD:  cd src && git status
-GOOD: git status
-```
+Read `~/.claude/skills/shared/bash-rules.md` for bash command constraints.
 
 ## Process:
 
@@ -47,21 +28,11 @@ GOOD: git status
    - Exclude any untracked files that match `.gitignore` patterns — do not propose committing them
 
 3. **Plan your commit(s):**
-   - Group into atomic commits by feature/fix/refactor, make sure that each element can be committed independently.
+   - Read `~/.claude/skills/shared/commit-message-rules.md` for commit message formatting and validation rules
+   - Group into atomic commits by feature/fix/refactor, make sure that each element can be committed independently
    - Identify which files belong together
    - Put tests and documentation changes in the same commit as the feature they cover, unless there is a significant reason to separate
-   - Draft Conventional Commit messages (type: subject\n\nbody bullets)
-   - Use imperative mood in commit messages
-   - Subject line max 50 characters, body lines wrapped at 72 characters
-   - Focus on why the changes were made, not just what
-
-4. **Validate each commit message:**
-   - Imperative mood ("add" not "added")
-   - Subject line ≤ 50 characters
-   - No trailing period
-   - Type prefix not repeated in description (e.g. not "refactor: refactor...")
-   - No capitalized first word after type prefix
-   - Do not list files or file-level descriptions in the commit message body — the file list is shown separately in the plan
+   - Draft and validate commit messages following the shared rules
 
 5. **Present your plan to the user:**
    - Separate each commit with a unicode line: `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`
@@ -79,15 +50,10 @@ GOOD: git status
 
 ## Important:
 - **NEVER execute commits without explicit user approval.** Invoking `/commit` (even repeatedly) only requests a plan — it is NOT approval to proceed. Wait for a clear "yes", "proceed", or equivalent before running any `git commit` commands.
-- **NEVER add co-author information or Claude attribution**
-- Commits should be authored solely by the user
-- Do not include any "Generated with Claude" messages
-- Do not add "Co-Authored-By" lines
 - Write commit messages as if the user wrote them
 
-## Examples
+## Example output
 
-Good output:
 ```
 **Commit 1**
 
@@ -101,20 +67,6 @@ Good output:
 `.claude/skills/commit/scripts/format_files.py`   Deleted
 `README.md`                                       Add Claude Code skills section
 ```
-
-Good commit messages:
-- `feat: add marker holder model`
-- `refactor: consolidate edge filtering logic in edgefilters module`
-- `chore: update README with published models, add missing deps to requirements`
-- `feat: add fillet radius reuse and arc support to Pencil`
-
-Bad commit messages:
-- `feat: added new marker holder model to the project` (past tense, verbose)
-- `refactor: refactored edge filtering` (redundant — type already says refactor)
-- `update stuff` (no type, vague)
-- `fix: fix bug` (no useful information)
-- `feat: add SmartBox.with_delta() class method and update all callers to use it` (too long, move details to body)
-- `feat: add keepPathFrom site rule for path trimming` with body `Strips SEO slug segments before an anchor like dp or gp, producing cleaner Amazon URLs.` (body repeats what the subject already says — body should add context not visible from the diff, not rephrase the subject)
 
 ## Out of scope:
 - Do NOT push to remote
