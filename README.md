@@ -104,11 +104,47 @@ Generates or updates a data-flow architecture document (`docs/data-flow.md`).
 - Generates message/API protocol tables for all message types and endpoints
 - Follows strict formatting rules for consistency across updates
 
+---
+
+### Review Summary
+
+Summarizes a ralphex review — what was found, fixed, and dismissed.
+
+**Command:** `/review-summary`
+
+**Features:**
+- Reads the most recent progress log from `.ralphex/progress/`
+- Identifies committed but unpushed changes against `origin/main`
+- Produces a concise summary: confirmed fixes, unaddressed concerns, and false positives
+
+---
+
+## Hooks
+
+### Telegram Notification
+
+Sends a Telegram message when Claude Code finishes a task and the user hasn't interacted for 60 seconds. Useful for long-running autonomous workflows.
+
+**Location:** `.claude/hooks/notifications/telegram.py`
+
+**How it works:**
+- `UserPromptSubmit` hook records each prompt to `.claude/hooks/notifications/last_active` in the project directory
+- `Notification` hook fires when Claude stops, waits 60 seconds, then checks if the user has been active since — if not, sends a Telegram message with the project name and last prompt
+
+**Setup:** Create `.claude/hooks/notifications/.env` with:
+
+```
+TELEGRAM_BOT_TOKEN=...
+TELEGRAM_CHAT_ID=...
+```
+
+---
+
 ## Global Installation
 
-Skills in this repository are only available when Claude Code runs inside it. To make them available across all your projects, symlink the `.claude/skills` directory into your global Claude Code config.
+Skills, hooks, and settings in this repository are the originals. To make them available across all your projects, create symlinks in your global Claude Code config (`~/.claude/`) pointing to `.claude/skills`, `.claude/hooks`, and `.claude/settings.json` in this repo.
 
-> If `~/.claude/skills` already exists, remove or rename it before creating the symlink.
+> If `~/.claude/skills`, `~/.claude/hooks`, or `~/.claude/settings.json` already exists, move it into the repo first (or remove it) before creating the symlink.
 
 ### Windows
 
@@ -116,6 +152,8 @@ Run from the project root *as Administrator*:
 
 ```powershell
 New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.claude\skills" -Target ".claude\skills"
+New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.claude\hooks" -Target ".claude\hooks"
+New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.claude\settings.json" -Target ".claude\settings.json"
 ```
 
 ### Linux / macOS
@@ -124,6 +162,8 @@ Run from the project root:
 
 ```bash
 ln -s "$(pwd)/.claude/skills" ~/.claude/skills
+ln -s "$(pwd)/.claude/hooks" ~/.claude/hooks
+ln -s "$(pwd)/.claude/settings.json" ~/.claude/settings.json
 ```
 
 ## License
