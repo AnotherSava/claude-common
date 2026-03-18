@@ -29,6 +29,7 @@ Read `~/.claude/skills/shared/bash-rules.md` for bash command constraints.
 
 3. **Update stale documentation and comments:**
    - Read the project README.md (at the repo root) and check if any references to changed paths, APIs, or behavior are stale
+   - Check `docs/data-flow.md` (if it exists) and verify it reflects any changes to data flow, message protocols, or control flow logic — use the `/document-data-flow` skill to update it if needed
    - Check comments and docstrings in source files that reference changed behavior, not just the modified files themselves
    - Fix any stale references before proceeding — do not commit code with outdated docs
 
