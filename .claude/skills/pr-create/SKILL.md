@@ -61,7 +61,7 @@ Read `~/.claude/skills/shared/bash-rules.md` for bash command constraints.
    git diff main...HEAD
    ```
 
-6. Read the project README.md (at the repo root) and check if any references to changed paths, APIs, or behavior are stale. Check `docs/data-flow.md` (if it exists) and verify it reflects any changes to data flow, message protocols, or control flow logic — use the `/document-data-flow` skill to update it if needed. Also check comments and docstrings in source files that reference changed behavior, not just the modified files themselves. Fix any stale references before proceeding.
+6. Read the project README.md (at the repo root) and check if any references to changed paths, APIs, or behavior are stale. Check `docs/pages/data-flow.md` (if it exists) and verify it reflects any changes to data flow, message protocols, or control flow logic — use the `/document-data-flow` skill to update it if needed. Also check comments and docstrings in source files that reference changed behavior, not just the modified files themselves. Fix any stale references before proceeding.
 
 7. Find the latest completed plan doc — look in `docs/plans/completed/` for the most recently created file whose name relates to the current branch or the work described in the commits.
 

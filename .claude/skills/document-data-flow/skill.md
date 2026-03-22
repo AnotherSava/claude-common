@@ -1,12 +1,12 @@
 ---
 name: document-data-flow
-description: Create or update the data flow architecture document (docs/data-flow.md).
+description: Create or update the data flow architecture document (docs/pages/data-flow.md).
 allowed-tools: Read, Glob, Grep, Write, Edit, Agent
 ---
 
 # Document Data Flow
 
-Create or update `docs/data-flow.md` — a reference document tracing how data moves between the major components of the project.
+Create or update `docs/pages/data-flow.md` — a reference document tracing how data moves between the major components of the project.
 
 ## When to run
 
@@ -30,7 +30,7 @@ Use `Glob` and `Grep` to locate configuration files, route definitions, message 
 
 ### Step 2: Update the document
 
-Update `docs/data-flow.md` covering:
+Update `docs/pages/data-flow.md` covering:
 - Component overview (each major component, its role, and key files)
 - Serialization and data format constraints (if any)
 - Data flow diagrams for each major flow (e.g. request handling, event processing, data sync)
