@@ -1,6 +1,6 @@
 # Claude Code Skills
 
-A collection of reusable [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skills for implementation planning, PR workflows, and architecture documentation.
+A collection of reusable [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skills, hooks, and utility scripts for implementation planning, PR workflows, and architecture documentation.
 
 ## Skills
 
@@ -150,6 +150,22 @@ Sends a Telegram message when Claude Code finishes a task and the user hasn't in
 TELEGRAM_BOT_TOKEN=...
 TELEGRAM_CHAT_ID=...
 ```
+
+---
+
+## Scripts
+
+Scripts in this section are written in [AutoHotkey v2](https://www.autohotkey.com/) (Windows-only). To run a script, install AutoHotkey v2 and double-click the `.ahk` file. To auto-start a script with Windows, place a shortcut to it in your Startup folder — press <kbd>Win+R</kbd>, type `shell:startup`, and drop the shortcut there.
+
+---
+
+### Monosnap Watcher
+
+**File:** `scripts/monosnap-watcher.ahk` (AutoHotkey v2)
+
+Claude Code can't receive pasted images — it needs a file path. Monosnap (a screenshot tool) can auto-save captures to a folder, but doesn't copy the file path to the clipboard. This script bridges the gap: it watches the Monosnap output folder and copies the path of each new screenshot to the clipboard, so you can paste it straight into Claude Code.
+
+**Setup:** Set the `MONOSNAP_DIR` environment variable to your Monosnap auto-save folder (e.g. `C:\Users\OlegS\Monosnap`).
 
 ---
 
