@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 D:/projects/claude/.claude/hooks/notifications/telegram.py",
+            "command": "python3 \"$HOME/.claude/hooks/notifications/telegram.py\"",
             "async": true
           }
         ]

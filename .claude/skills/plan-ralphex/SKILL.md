@@ -1,7 +1,7 @@
 ---
 name: plan-ralphex
 description: Create an implementation plan for a new feature, refactor, or fix. Guides an interactive design discussion and produces a structured plan document.
-allowed-tools: Read, Glob, Grep, Agent, AskUserQuestion
+allowed-tools: Read, Write, Edit, Glob, Grep, Agent, Skill, AskUserQuestion
 ---
 
 # Create Implementation Plan
@@ -98,10 +98,17 @@ the reasoning is clear without re-reading the discussion.
 - [ ] Move this plan to `docs/plans/completed/`
 ```
 
-## Step 5: Confirm with the user
+## Step 5: Iterative review with the user
 
-Show the plan and ask if they want any changes before writing it to disk.
+After writing the plan to disk, invoke `/plannotator-annotate` on the plan file so the user can review and annotate it interactively.
+
+1. Run `/plannotator-annotate docs/plans/<plan-file>.md`
+2. Address all annotation feedback by editing the plan file
+3. Run `/plannotator-annotate` again on the updated plan
+4. Repeat until the user approves the plan with no further annotations
+
+Do NOT skip this step or substitute it with a text-based "any changes?" question.
 
 ## Completion
 
-The end goal of this skill is a plan document in `docs/plans/`. Once the user approves the plan and it is written to disk, the skill is **done**. Do NOT offer to execute the plan, start implementation, or invoke any other skill (e.g. ralphex) to carry out the plan.
+The end goal of this skill is a plan document in `docs/plans/`. Once the user approves the plan (no more annotations) and it is written to disk, the skill is **done**. Do NOT offer to execute the plan, start implementation, or invoke any other skill (e.g. ralphex) to carry out the plan.
