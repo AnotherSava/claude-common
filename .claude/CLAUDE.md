@@ -1,0 +1,1 @@
+Files in this repo are symlinked to global locations (`~/.claude/`, `~/.git-hooks/`). When adding a new file that needs global installation, add the symlink command to the appropriate section in `README.md`.
