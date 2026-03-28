@@ -48,14 +48,19 @@ Read `~/.claude/skills/shared/bash-rules.md` for bash command constraints.
    - Check comments and docstrings in source files that reference changed behavior, not just the modified files themselves
    - Fix any stale references before proceeding — do not commit code with outdated docs
 
-5. **Plan your commit(s):**
+5. **Confidentiality check:**
+   - Scan the diff for content that should not be committed to a public repository: API keys, tokens, passwords, private URLs, internal hostnames, personal data (emails, phone numbers, real names in test data), or proprietary business logic
+   - Pay extra attention to learning files (`claude/learnings/`): these are domain knowledge docs meant to be generic and reusable — flag any project-specific details, internal URLs, proprietary names, or customer data that leaked in from the source project
+   - If anything looks sensitive, list the findings and ask the user before proceeding — do not silently include them in the commit plan
+
+6. **Plan your commit(s):**
    - Read `~/.claude/skills/shared/commit-message-rules.md` for commit message formatting and validation rules
    - Group into atomic commits by feature/fix/refactor, make sure that each element can be committed independently
    - Identify which files belong together
    - Put tests and documentation changes in the same commit as the feature they cover, unless there is a significant reason to separate
    - Draft and validate commit messages following the shared rules
 
-6. **Present your plan to the user:**
+7. **Present your plan to the user:**
    - Separate each commit with a unicode line: `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`
    - For each commit show:
      1. **Commit N**
@@ -63,7 +68,7 @@ Read `~/.claude/skills/shared/bash-rules.md` for bash command constraints.
      3. Number of files and lines changed, then without an empty line in betweem, file list: each file as `inline code` followed by brief description. Pad each file entry with spaces so all entries match the length of the longest one, aligning descriptions into a column.
    - End with: "I plan to create **N** commit(s) with these changes. Shall I proceed?"
 
-7. **Execute upon confirmation:**
+8. **Execute upon confirmation:**
    - First, run `git reset HEAD` to unstage everything — this ensures pre-staged files don't leak into the wrong commit
    - Use `git add` with specific files (never use `-A` or `.`)
    - Create commits with your planned messages using `git commit -S` to GPG-sign them

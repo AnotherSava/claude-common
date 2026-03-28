@@ -169,6 +169,20 @@ Prevents pushing commits that are Claude-attributed or not GPG-signed. Every new
 
 ---
 
+## Learnings
+
+Domain-specific knowledge files in `claude/learnings/` are available globally via the `~/.claude/learnings/` symlink. To use them in a project, add a line to that project's `CLAUDE.md`:
+
+```
+Read `~/.claude/learnings/chrome-extension.md` for domain-specific patterns.
+```
+
+| File | Domain |
+|---|---|
+| `chrome-extension.md` | Chrome extensions (Manifest V3, Vite, side panel, service workers) |
+
+---
+
 ## Scripts
 
 Scripts in this section are written in [AutoHotkey v2](https://www.autohotkey.com/) (Windows-only). To run a script, install AutoHotkey v2 and double-click the `.ahk` file. To auto-start a script with Windows, place a shortcut to it in your Startup folder — press <kbd>Win+R</kbd>, type `shell:startup`, and drop the shortcut there.
@@ -200,6 +214,7 @@ New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.claude\CLAUDE.md" -Targ
 New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.claude\skills" -Target "$PWD\claude\skills"
 New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.claude\hooks" -Target "$PWD\claude\hooks"
 New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.claude\settings.json" -Target "$PWD\claude\settings.json"
+New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.claude\learnings" -Target "$PWD\claude\learnings"
 New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.git-hooks" -Target "$PWD\git\hooks"
 New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.gitignore_global" -Target "$PWD\git\gitignore_global"
 git config --global core.hooksPath "$env:USERPROFILE\.git-hooks"
@@ -215,6 +230,7 @@ ln -s "$(pwd)/claude/CLAUDE.md" ~/.claude/CLAUDE.md
 ln -s "$(pwd)/claude/skills" ~/.claude/skills
 ln -s "$(pwd)/claude/hooks" ~/.claude/hooks
 ln -s "$(pwd)/claude/settings.json" ~/.claude/settings.json
+ln -s "$(pwd)/claude/learnings" ~/.claude/learnings
 ln -s "$(pwd)/git/hooks" ~/.git-hooks
 ln -s "$(pwd)/git/gitignore_global" ~/.gitignore_global
 git config --global core.hooksPath ~/.git-hooks
