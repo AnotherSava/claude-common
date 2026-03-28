@@ -1,4 +1,5 @@
 ---
+name: review-summary
 description: Summarize the ralphex review - analyze progress log, commits, and changes
 allowed-tools: Bash, Read, Glob, Grep
 ---

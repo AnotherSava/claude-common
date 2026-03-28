@@ -1,7 +1,7 @@
 ---
 name: commit
 description: Analyzes changes and generates Conventional Commit messages
-allowed-tools: Read, Glob, Bash(git diff:*), Bash(git add:*), Bash(git commit:*), Bash(git status:*), Bash(git log:*), Bash(git reset HEAD:*), Bash(git ls-files:*)
+allowed-tools: Read, Glob, Bash(git diff:*), Bash(git add:*), Bash(git commit:*), Bash(git status:*), Bash(git log:*), Bash(git reset HEAD:*), Bash(git reset:*), Bash(git ls-files:*), Bash(git rev-list:*), Bash(git rev-parse:*)
 ---
 
 # Commit Changes
@@ -26,22 +26,36 @@ Read `~/.claude/skills/shared/bash-rules.md` for bash command constraints.
    - Include ALL uncommitted changes in the plan — both staged and unstaged — unless they match `.gitignore` patterns
    - **Scope guard:** Only commit files that belong to this repository. If earlier work in the conversation touched files in other projects, do not include those changes — each project's commits are handled separately.
 
-2. **Optimize imports in modified files**
+2. **Check for unpushed commits:**
+   - Run `git log @{upstream}..HEAD --oneline 2>/dev/null` (falls back to `git log origin/$(git rev-parse --abbrev-ref HEAD)..HEAD --oneline 2>/dev/null`) to check for unpushed commits
+   - If there are **no unpushed commits**, skip to the next step
+   - If there **are** unpushed commits, present a numbered list and ask the user to pick one:
+     > There are **N** unpushed commit(s) on this branch. What scope should I commit?
+     > 1. Uncommitted changes only *(default)*
+     > 2. Reset to `abc1234 commit message` — include this + all above + uncommitted
+     > 3. Reset to `def5678 commit message` — include this + all above + uncommitted
+     > …
+     List commits in **descending** order (most recent first), so each successive option includes more history. The first commit listed resets only the latest commit; the last resets all unpushed commits.
+   - Wait for the user's choice (bare Enter or `1` = default):
+     - **Option 1:** proceed normally with only uncommitted changes
+     - **Any other option:** run `git reset <chosen-commit>~` (soft reset to the parent of the chosen commit), then treat all resulting uncommitted changes as the working set for planning
 
-3. **Update stale documentation and comments:**
+3. **Optimize imports in modified files**
+
+4. **Update stale documentation and comments:**
    - Read the project README.md (at the repo root) and check if any references to changed paths, APIs, or behavior are stale
    - Check `docs/pages/data-flow.md` (if it exists) and verify it reflects any changes to data flow, message protocols, or control flow logic — use the `/document-data-flow` skill to update it if needed
    - Check comments and docstrings in source files that reference changed behavior, not just the modified files themselves
    - Fix any stale references before proceeding — do not commit code with outdated docs
 
-4. **Plan your commit(s):**
+5. **Plan your commit(s):**
    - Read `~/.claude/skills/shared/commit-message-rules.md` for commit message formatting and validation rules
    - Group into atomic commits by feature/fix/refactor, make sure that each element can be committed independently
    - Identify which files belong together
    - Put tests and documentation changes in the same commit as the feature they cover, unless there is a significant reason to separate
    - Draft and validate commit messages following the shared rules
 
-5. **Present your plan to the user:**
+6. **Present your plan to the user:**
    - Separate each commit with a unicode line: `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`
    - For each commit show:
      1. **Commit N**
@@ -49,7 +63,7 @@ Read `~/.claude/skills/shared/bash-rules.md` for bash command constraints.
      3. Number of files and lines changed, then without an empty line in betweem, file list: each file as `inline code` followed by brief description. Pad each file entry with spaces so all entries match the length of the longest one, aligning descriptions into a column.
    - End with: "I plan to create **N** commit(s) with these changes. Shall I proceed?"
 
-6. **Execute upon confirmation:**
+7. **Execute upon confirmation:**
    - First, run `git reset HEAD` to unstage everything — this ensures pre-staged files don't leak into the wrong commit
    - Use `git add` with specific files (never use `-A` or `.`)
    - Create commits with your planned messages using `git commit -S` to GPG-sign them
@@ -70,14 +84,14 @@ Read `~/.claude/skills/shared/bash-rules.md` for bash command constraints.
 - Add Claude Code skills section to README
 
 3 files, +7/−35 lines
-`.claude/skills/commit/SKILL.md`                  Remove script references, simplify formatting
-`.claude/skills/commit/scripts/format_files.py`   Deleted
+`claude/skills/commit/SKILL.md`                  Remove script references, simplify formatting
+`claude/skills/commit/scripts/format_files.py`   Deleted
 `README.md`                                       Add Claude Code skills section
 ```
 
 ## Out of scope:
 - Do NOT push to remote
-- Do NOT amend existing commits
+- Do NOT amend existing commits (soft-reset via step 2 is allowed when user explicitly chooses it)
 - Do NOT create or switch branches
 - Do NOT move, rename, or delete files
 - Do NOT modify `.gitignore` or restructure code to avoid ignore rules

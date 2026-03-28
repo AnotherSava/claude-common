@@ -1,0 +1,63 @@
+# Global Guidelines
+
+Never prepend `cd` to commands — the working directory is already the project root.
+Use relative paths for files inside the project. Absolute paths are acceptable for files outside the project root.
+
+Always ask clarifying questions before implementing if anything is ambiguous or unclear.
+
+Exclude `node_modules/` from all file and content search patterns — it clogs results with false positives.
+
+Do not inline Python scripts into Bash commands via `python -c`. Instead, use a heredoc: `python <<'EOF' ... EOF`.
+
+Do not add logic, data structures, classes, or exports to production code that exist only to support tests. Tests should exercise the public API and real behavior — not rely on test-only hooks, flags, exports, or types in production modules.
+
+## Git Workflow
+
+- Do not create git commits unless explicitly asked
+- Do not push to remote unless explicitly requested
+- Follow `~/.claude/skills/shared/commit-message-rules.md`
+
+## Windows Bash Commands
+
+When running commands via Bash on Windows, always use forward slashes (`/`) in paths, not backslashes (`\`). Backslashes are interpreted as escape characters by bash and get stripped.
+
+## Code Style
+
+### Formatting
+
+- Leave an empty line at the end of every file
+- Prefer single-line expressions over multi-line formatting, even if they're long. **Exception**: multi-line is acceptable when calling functions/constructors with all named parameters.
+
+### Early Returns
+
+Avoid adding early return guards like `if not items: return` when the function would behave identically without them (e.g., a `for` loop over an empty collection naturally does nothing). Only add early returns when they actually change behavior or prevent errors.
+
+### Type Hints (Python)
+
+Always specify parameter and return types.
+
+### Import Organization
+
+Place imports at the top of the file. Order (with blank lines between groups):
+1. Standard library
+2. Third-party
+3. Local
+
+Inline imports only for circular import resolution (add comment: `# inline to avoid circular import`) or `TYPE_CHECKING` blocks.
+
+### Dependencies (Python)
+
+When adding or removing a third-party import, update `requirements.txt` in the same change to keep it in sync.
+
+### Refactoring Safety
+
+When changing field/function names, search all usages (including tests) and update accordingly before making breaking changes. Run all tests after refactoring.
+
+## Symlinks
+
+- **Windows:** Never create symlinks from Bash (`ln -s`) — it silently creates copies instead. Use PowerShell `New-Item -ItemType SymbolicLink` from an Administrator prompt. Use `$PWD` to build absolute target paths.
+- **Linux / macOS:** Use `ln -s` with an absolute target path (`"$(pwd)/..."`).
+
+## Skills
+
+Skills live in `.claude/skills/<skill-name>/` (project-local) or `~/.claude/skills/<skill-name>/` (global). The entry point for each skill is `SKILL.md`.

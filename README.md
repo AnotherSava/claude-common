@@ -138,13 +138,13 @@ Force-updates the plannotator plugin by clearing stale caches and reinstalling.
 
 Sends a Telegram message when Claude Code finishes a task and the user hasn't interacted for 60 seconds. Useful for long-running autonomous workflows.
 
-**Location:** `.claude/hooks/notifications/telegram.py`
+**Location:** `claude/hooks/notifications/telegram.py`
 
 **How it works:**
-- `UserPromptSubmit` hook records each prompt to `.claude/hooks/notifications/last_active` in the project directory
+- `UserPromptSubmit` hook records each prompt to a temporary file (`/tmp/claude-last-active-<project-hash>`) keyed by project directory
 - `Notification` hook fires when Claude stops, waits 60 seconds, then checks if the user has been active since — if not, sends a Telegram message with the project name and last prompt
 
-**Setup:** Create `.claude/hooks/notifications/.env` with:
+**Setup:** Create `claude/hooks/notifications/.env` with:
 
 ```
 TELEGRAM_BOT_TOKEN=...
@@ -157,7 +157,7 @@ TELEGRAM_CHAT_ID=...
 
 ### Pre-Push Validation
 
-**File:** `.git-hooks/pre-push`
+**File:** `git/hooks/pre-push`
 
 Prevents pushing commits that are Claude-attributed or not GPG-signed. Every new commit in the push is checked for:
 
@@ -187,20 +187,20 @@ Claude Code can't receive pasted images — it needs a file path. Monosnap (a sc
 
 ## Global Installation
 
-Skills, hooks, settings, and `CLAUDE.md` in this repository are the originals. To make them available across all your projects, create symlinks in your global Claude Code config (`~/.claude/`) pointing to the corresponding files in this repo.
+Global files live in `claude/` (symlinked to `~/.claude/`) and `git/` (symlinked to `~/.git-hooks/`). Project-local config stays in `.claude/`.
 
-> If any of these already exist in `~/.claude/`, move them into the repo first (or remove them) before creating the symlink.
+> If any of these already exist in `~/.claude/` or `~/.git-hooks/`, move them into the repo first (or remove them) before creating the symlink.
 
 ### Windows
 
 Run from the project root *as Administrator*:
 
 ```powershell
-New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.claude\CLAUDE.md" -Target "CLAUDE.md"
-New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.claude\skills" -Target ".claude\skills"
-New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.claude\hooks" -Target ".claude\hooks"
-New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.claude\settings.json" -Target ".claude\settings.json"
-New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.git-hooks" -Target ".git-hooks"
+New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.claude\CLAUDE.md" -Target "$PWD\claude\CLAUDE.md"
+New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.claude\skills" -Target "$PWD\claude\skills"
+New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.claude\hooks" -Target "$PWD\claude\hooks"
+New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.claude\settings.json" -Target "$PWD\claude\settings.json"
+New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.git-hooks" -Target "$PWD\git\hooks"
 git config --global core.hooksPath "$env:USERPROFILE\.git-hooks"
 ```
 
@@ -209,11 +209,11 @@ git config --global core.hooksPath "$env:USERPROFILE\.git-hooks"
 Run from the project root:
 
 ```bash
-ln -s "$(pwd)/CLAUDE.md" ~/.claude/CLAUDE.md
-ln -s "$(pwd)/.claude/skills" ~/.claude/skills
-ln -s "$(pwd)/.claude/hooks" ~/.claude/hooks
-ln -s "$(pwd)/.claude/settings.json" ~/.claude/settings.json
-ln -s "$(pwd)/.git-hooks" ~/.git-hooks
+ln -s "$(pwd)/claude/CLAUDE.md" ~/.claude/CLAUDE.md
+ln -s "$(pwd)/claude/skills" ~/.claude/skills
+ln -s "$(pwd)/claude/hooks" ~/.claude/hooks
+ln -s "$(pwd)/claude/settings.json" ~/.claude/settings.json
+ln -s "$(pwd)/git/hooks" ~/.git-hooks
 git config --global core.hooksPath ~/.git-hooks
 ```
 

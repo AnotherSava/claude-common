@@ -1,2 +1,2 @@
-.claude/hooks/notifications/.env
-.claude/hooks/notifications/last_active
+claude/hooks/notifications/.env
+__pycache__/

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
+import hashlib
 import os
 import sys
+import tempfile
 import time
 from pathlib import Path
 
@@ -9,8 +11,10 @@ import requests
 
 load_dotenv(Path(__file__).resolve().parent / ".env")
 
-TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
-CHAT_ID = os.environ["TELEGRAM_CHAT_ID"]
+TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "")
+if not TOKEN or not CHAT_ID:
+    sys.exit(0)
 
 def notify(text: str) -> None:
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
@@ -18,12 +22,13 @@ def notify(text: str) -> None:
         "chat_id": CHAT_ID,
         "text": text,
     }
-    r = requests.get(url, params=params, timeout=10)
+    r = requests.post(url, json=params, timeout=10)
     r.raise_for_status()
 
 PROJECT_ROOT = Path.cwd()
 PROJECT_NAME = PROJECT_ROOT.name
-LAST_ACTIVE_FILE = PROJECT_ROOT / ".claude" / "hooks" / "notifications" / "last_active"
+_project_id = hashlib.md5(str(PROJECT_ROOT).encode()).hexdigest()[:12]
+LAST_ACTIVE_FILE = Path(tempfile.gettempdir()) / f"claude-last-active-{_project_id}"
 NOTIFICATION_DELAY = 60  # seconds
 
 def last_active_info() -> tuple[bool, str]:
