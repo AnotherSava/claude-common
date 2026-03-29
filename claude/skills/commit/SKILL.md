@@ -27,8 +27,9 @@ Read `~/.claude/skills/shared/bash-rules.md` for bash command constraints.
    - **Scope guard:** Only commit files that belong to this repository. If earlier work in the conversation touched files in other projects, do not include those changes — each project's commits are handled separately.
 
 2. **Check for unpushed commits:**
-   - Run `git log @{upstream}..HEAD --oneline 2>/dev/null` (falls back to `git log origin/$(git rev-parse --abbrev-ref HEAD)..HEAD --oneline 2>/dev/null`) to check for unpushed commits
-   - If there are **no unpushed commits**, skip to the next step
+   - First check if an upstream is configured: run `git rev-parse --abbrev-ref @{upstream}` — if this fails (exit code 128), there is no upstream; fall back to `git log origin/$(git rev-parse --abbrev-ref HEAD)..HEAD --oneline` — if that also fails, assume no unpushed commits (e.g. remote doesn't exist yet or branch was just pushed)
+   - If upstream exists, run `git log @{upstream}..HEAD --oneline` to list unpushed commits
+   - Only if the command **succeeds and produces output** are there unpushed commits — empty output or command failure both mean "no unpushed commits", skip to the next step
    - If there **are** unpushed commits, present a numbered list and ask the user to pick one:
      > There are **N** unpushed commit(s) on this branch. What scope should I commit?
      > 1. Uncommitted changes only *(default)*
@@ -72,7 +73,7 @@ Read `~/.claude/skills/shared/bash-rules.md` for bash command constraints.
    - First, run `git reset HEAD` to unstage everything — this ensures pre-staged files don't leak into the wrong commit
    - Use `git add` with specific files (never use `-A` or `.`)
    - Create commits with your planned messages using `git commit -S` to GPG-sign them
-   - Show the result with `git log --oneline -n [number]`
+   - After all commits are done, run `git log @{upstream}..HEAD --format="%h %ai %s"` (with the same fallback logic as step 2) to list all unpushed commits. Format each line as `Mon DD, HH:MM [hash] message` (e.g. `Mar 28, 16:59 [a37da68] feat: add side panel`). Display the full list as the end summary — this gives the user the complete picture of what will be pushed.
 
 ## Important:
 - **NEVER execute commits without explicit user approval.** Invoking `/commit` (even repeatedly) only requests a plan — it is NOT approval to proceed. Wait for a clear "yes", "proceed", or equivalent before running any `git commit` commands.
